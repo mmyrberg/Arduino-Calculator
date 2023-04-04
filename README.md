@@ -1,5 +1,5 @@
 # Arduino-Calculator
-Inlämningsuppgift i kursen Ellära och grundläggande programmering för inbyggda system
+Inlämningsuppgift i kursen *Ellära och grundläggande programmering för inbyggda system*
 
 > Länk till projekt:  https://wokwi.com/projects/359918599245191169
 
@@ -21,7 +21,7 @@ Miniräknaren baseras på fyra huvudsakliga hårvarukomponenter:
 *   Potentiometer (variabelt motstånd/resistans)
 
 ![Sammankoppling](link-up.png)
-*Färdig sammankoppling av ovan beskrivna komponenter. För att underlätta hopkopplingen användes ett kopplingsbräde (breadboard)*
+*Färdig sammankoppling av ovan beskrivna komponenter. För att underlätta hopkopplingen användes ett kopplingsbräde (breadboard).*
 
 ##### Keypad
 Till en början kopplade jag samman keypaden med Arduino. Keypaden består av 8 olika ”pins” (kopplingsstift) varav 4 pins för att läsa keypadens rader och 4 pins för dess kolumner. Varje rad (R1-R4, blåa kablar på bild ovan) och varje kolumn (C1-C4, gröna kablar på bild ovan) kopplas direkt till en digital I/O-pin på Arduino. Jag valde digital-pin 6 till 13, men det går även att koppla till andra digitala pins på Arduinon t.ex. 9 till 2. En knapptryckning på keypaden upprättar en koppling i 
@@ -43,7 +43,7 @@ Slutligen kopplade jag en potentiometer (port SIG) till port V0 på LCD-skärmen
 
 *OBS! Här ges en sammanfattande beskrivning av programvaran. För hela den detaljerade programkoden med tillhörande kommentarer se: https://wokwi.com/projects/359918599245191169*
 
-Kalkylatorns programvara tar sin utgångspunkt i två centrala bibliotek; `Keypad` och `LiquidCrystal`. Genom att använda dessa bibliotek går det enkelt hämta in funktionalitet för att kontrollera keypad och LCD komponenterna. Detta görs genom att instansiera objekt (`lcd` och `myKeyPad`) från klasser i LiquidCrystal resp. Keypad-biblioteken och skicka in relevant information (bl.a. pin-nummer) till resp. konstruktor. 
+Kalkylatorns programvara tar sin utgångspunkt i två centrala bibliotek; `Keypad` och `LiquidCrystal` ” (Obs! Dessa bibliotek behöver först installeras/inkluderas innan de går att använda). Genom att använda dessa bibliotek går det enkelt hämta in funktionalitet för att kontrollera keypad och LCD komponenterna. Detta görs genom att instansiera objekt (`lcd` och `myKeyPad`) från klasser i LiquidCrystal resp. Keypad-biblioteken och skicka in relevant information (bl.a. pin-nummer) till resp. konstruktor. 
 
 `LiquidCrystal lcd(0,1,2,3,4,5);`
 
@@ -61,16 +61,16 @@ char Keys[ROWS][COLS] = {
 När alla nödvändiga deklarationer (variabler, objekt, arrayer osv.) var definierade, skrevs därefter programmets logik. Programmet hämtar sin logik från tre funktioner: `Setup()`, `Loop()` och `resetCalc()`. De två förstnämnda är två standardfunktioner, närvarande i alla Arduino-program, medan den sista är skapad för att återställa kalkylatorn. Dessa funktioner beskrivs närmare nedan.
 
 ##### Setup-funktionen: `void setup()`
-Körs en gång vid uppstart. Jag nyttjade denna funktion till att visa välkomstmeddelanden och användarinstruktioner på LCD-skärmen. De olika meddelanden visas med en viss fördröjning för att användaren ska hinna ta in informationen, exempelvis instruktioner för hantering av de fyra räknesätten på keypaden (A = +, B = -, C = *, D = /). Setup-funktionen avslutas med att meddela användaren (på LCD-skärmen) att miniräknarens funktionalitet är begränsad och endast tar ensiffriga heltal.
+Körs en gång vid uppstart. Jag nyttjade denna funktion för att visa välkomstmeddelanden och användarinstruktioner på LCD-skärmen. De olika meddelanden visas med en viss fördröjning för att användaren ska hinna ta in informationen, exempelvis instruktioner för hantering av de fyra räknesätten på keypaden (A = +, B = -, C = *, D = /). Setup-funktionen avslutas med att meddela användaren (på LCD-skärmen) att miniräknarens funktionalitet är begränsad och endast tar ensiffriga heltal.
 
 ##### Loop-funktionen: `void loop()`
-Loop-funktionen genomför själva beräkningslogiken, det är här miniräknaren hämtar sina instruktioner beroende på användarens val. Loop-funktionen består av flertalet nästlade IF-satser som utför villkorsbaserade instruktioner. Jag har dock insett att detta kan försvåra förståelsen för koden vid utomstående granskning då alla IF-satser kan göra det rörigt att hänga med i koden. I syfte att förenkla förståelsen för andra, och göra det lite ”snyggare”, hade jag kunnat dela upp loop-funktionen i separata funktioner som sedan hade anropas inne i loop-funktionen. Se till exempel Wokwi’s specade exempelprojekt med tillhörande kod för ett sådant exempel: https://wokwi.com/projects/276825819240727048.
+Loop-funktionen genomför själva beräkningslogiken, det är här miniräknaren hämtar sina instruktioner beroende på användarens val. Loop-funktionen består av flertalet nästlade IF-satser som utför villkorsbaserade instruktioner. Jag har dock insett att detta kan försvåra förståelsen för koden vid utomstående granskning då alla IF-satser kan göra det rörigt att hänga med i koden. I syfte att förenkla förståelsen för andra, och göra det lite ”snyggare”, hade jag kunnat dela upp loop-funktionen i separata funktioner som sedan hade anropas inne i loop-funktionen. För ett sådant exempel, se Wokwi’s specade exempelprojekt med tillhörande kod: https://wokwi.com/projects/276825819240727048.
 
 ##### Reset-funktionen: `void resetCalc()`
-Denna funktion anropas vid eventuella feltryck eller när användaren trycker på reset (*). I loop-funktionens IF-satser finns det villkorsbestämmelser för att hantera feltryck oavsett var någonstans användaren är i sitt beräknade uttryck. Till exempel om användaren trycker 9+- eller 99 så anropas reset-funktionen via IF-satserna.
+Denna funktion anropas vid eventuella feltryck eller när användaren trycker på reset (*). I loop-funktionens IF-satser finns det villkorsbestämmelser för att hantera feltryck oavsett var någonstans användaren är i sitt beräknade uttryck. Till exempel om användaren trycker `9+-` eller `99` så anropas reset-funktionen via IF-satserna.
 
 ### Användning
-1. Gå in på *länk till projekt* högst upp. Detta tar dig direkt till projektet i Wokwi-simulatorn.
+1. Gå in på *länk till projekt* högst upp i denna README. Detta tar dig direkt till projektet i Wokwi.
 2. Ladda upp koden från filen `calculator.ino` i Wokwi-simulatorn om den inte redan finns där när du öppnar länken. 
 3. I simulatorn, tryck på play-knappen och läs instruktionerna som dyker upp på LCD-skärmen. Använd sedan knappsatsen för att mata in dina tal och välj önskat räknesätt.
 4. För att nollställa kalkylatorn, tryck på `*`.
